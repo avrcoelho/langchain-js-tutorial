@@ -1,17 +1,16 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatGoogle } from "@langchain/google";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
 import dotenv from "dotenv";
 
-dotenv.config({ path: ".env" });
+dotenv.config({ path: ".env", override: true });
 
-console.log(process.env.OPENAI_API_KEY);
-
-const model = new ChatOpenAI({
-  modelName: "gpt-3.5-turbo",
+// Create model
+const model = new ChatGoogle({
+  model: "gemini-pro-latest",
   temperature: 0.7,
-  maxTokens: 1_000,
-  verbose: true,
+  verbose: false,
 });
 
 model.invoke("Hello World").then((response) => {
-  console.log(response);
+  console.log(response.content);
 });

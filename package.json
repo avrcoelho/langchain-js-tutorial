@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "start": "node llm.js"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@langchain/openai": "^1.2.2",
+    "@langchain/core": "^1.1.44",
+    "@langchain/google": "^0.1.11",
+    "@langchain/openai": "^1.4.5",
     "dotenv": "^17.2.3",
-    "langchain": "^1.2.10"
+    "langchain": "^1.3.5",
+    "zod": "^4.4.3"
   }
 }
