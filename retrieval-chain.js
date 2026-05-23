@@ -14,6 +14,7 @@ import { createRetrievalChain } from "@langchain/classic/chains/retrieval";
 
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
+import { createStuffDocumentsChain } from "@langchain/classic/chains/combine_documents";
 
 // Initialize environment variables first
 dotenv.config({ path: ".env", override: true });
@@ -31,25 +32,6 @@ const splitter = new RecursiveCharacterTextSplitter({
   chunkOverlap: 20,
 });
 const splitDocs = await splitter.splitDocuments(docs);
-
-// Custom implementation of createStuffDocumentsChain using LCEL
-const createStuffDocumentsChain = async ({ llm, prompt }) => {
-  return RunnableSequence.from([
-    RunnablePassthrough.assign({
-      context: (input) => {
-        const docs = input.context;
-        if (!Array.isArray(docs)) {
-          return "";
-        }
-        return docs.map((doc) => doc.pageContent).join("\n\n");
-      },
-    }),
-    prompt,
-    llm,
-  ]);
-};
-
-
 
 const model = new ChatGoogle({
   model: "gemini-pro-latest",
@@ -78,7 +60,10 @@ const documentB = new Document({
   pageContent: "London is the capital of England.",
 });
 
-const vectorStores = await MemoryVectorStore.fromDocuments(splitDocs, embeddings);
+const vectorStores = await MemoryVectorStore.fromDocuments(
+  splitDocs,
+  embeddings,
+);
 
 //RETRIEVE DATA
 const retriever = vectorStores.asRetriever({
